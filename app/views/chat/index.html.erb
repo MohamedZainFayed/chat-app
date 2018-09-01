@@ -1,1 +1,45 @@
-<p>Welcome <b><%= @user.name %></b></p>
+<div style="width: 15%; height: 78%; text-align: center; border: solid 1px; position: absolute; left: 0.5%; top: 1%;">
+    <p><strong> Active users</strong></p>
+    <%- @users.each do |x| %>
+        <%- unless x.id == @user.id %>
+            <button style="border: solid 1px green; background-color: white; margin: 2px;", onclick="open_chat(<%= @user.id %>, <%= x.id %>, '<%= x.name %>')"><%= "#{x.name}, last seen: #{x.last_seen}" %></button>
+        <% end %>
+    <% end %>
+</div>
+
+<div style="width: 99%; height: 19%; text-align: left; border: solid 1px; position: absolute; left: 0.5%; bottom: 1%;">
+    <div  style="height: 100%; width: 100%; padding: 0.5%;">
+        <textarea id="chat_text" type="text-area" style="height: 100%; width: 90%; resize: none;"></textarea>
+    </div>
+</div>
+
+<button id="send_btn" disabled="true" style="height: 17%; width: 9.5%; position: absolute; right: 1%; bottom: 2%;">click a user</button>
+
+<div id="chat_box" style="width: 83.5%; height: 78%; border: solid 1px; position: absolute; right: 0.5%; top: 1%; margin: 1px;">
+    <strong> Click a user to start chatting!</strong>
+</div>
+
+<script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+<script>
+
+    function open_chat(sender, recipient, u_name){
+        btn = document.getElementById("send_btn");
+        btn.innerHTML = "Send";
+        btn.disabled = false;
+        box = document.getElementById("chat_box");
+        box.innerHTML = "<p><strong>" + u_name + "</strong></p>";
+    }
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('d3f3c4fa89029581de82', {
+      cluster: 'eu',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+        alert(data["message"]);
+    });
+</script>
