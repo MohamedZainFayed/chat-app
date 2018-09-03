@@ -3,4 +3,6 @@ Rails.application.routes.draw do
   root "chat#index"
   get "/new" => "registration#new"
   post "/new" => "registration#create"
+  get "/load_chat" => "chat#load_chat"
+  post "/add_message" => "chat#add_message"
 end
